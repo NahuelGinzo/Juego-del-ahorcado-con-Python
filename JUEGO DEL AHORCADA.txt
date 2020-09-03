@@ -1,0 +1,174 @@
+import random
+import time
+inicio=time.time()
+for i in range(10):
+    time.sleep(0.1)
+a= ("    !===N")
+b= ("   _o_  N")
+c= ("    |   N")
+d= ("   / \  N")
+e= ("=========")
+ahorcado= ['''
+      +---+
+      |   |
+          |
+          |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+          |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+      |   |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|   |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+     /    |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+     / \  |
+          |
+    =========''']
+print("*******************Bienvenido al******************")
+print("*"*50)
+print("*********************AHORCADO*********************")
+print("*"*50)
+print("****************¡Es hora de jugar!****************")
+print("*"*50)
+print("")
+for i in range(10):
+    time.sleep(0.2)
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+print("")
+print("")
+for i in range(10):
+    time.sleep(0.2)
+nom=raw_input("¿Como te/se llamas/llaman?")
+time.sleep(1)
+print("Hola,"+nom+"¡Comencemos!")
+print("")
+lista=["CASA","HOGUERA","HELADERA","PEGAMENTO","LIBRO","ANANA","MANZANA","KIWI","TORTA","PIZZA",
+       "TECLADO","MOUSE","MONITOR","PELO","LEON","TIGRE","CAMA","VENTANA","PUERTA","CUADRA","HORNO",
+       "MESA","SILLA","ROPERO","PLACARD","COCINA","SILLON","RELOJ","FOTOCOPIADORA","CELULAR","TABLET",
+       "COMPUTADORA","NOTEBOOK","NETBOOK","TELEVISOR","CAMARA","CONTROL","PARLANTE","DISCO","IMPRESORA",
+       "SCANNER","ESCRITORIO","LAVARROPAS","SECARROPAS","NARANJA","LIMON","BANANA","MANDARINA","FRUTILLA",
+       "SANDIA","MELON","TOMATE","BERENJENA","LECHUGA","APIO","BROCOLI","PIMIENTO","ACELGA","ESPINACA",
+       "CEBOLLA","OREGANO","PIMIENTA","PIMENTON","AJI","ALCAUCIL","LORO","AVESTRUZ","PINGUINO","CONDOR",
+       "AGUILA","PAJARO","SALMON","PIRANIA","PEZ PAYASO","TIBURON","PEZ ESPADA","ANGUILA","ATUN","COCODRILO",
+       "TORTUGA","SERPIENTE","LAGARTIJA","IGUANA","SAPO","RANA","SALAMANDRA","TRITON","BALLENA","DELFIN",
+       "CABALLO","MURCIELAGO","RINOCERONTE","ELEFANTE","DINOSAURIO","TRICERATOPS","MUSCULO","TENDON","ARTICULACIONES",
+       "ELONGACION","CORRER","SALTAR","CAMINAR","BOXEAR","GIMNASIA","FUTBOL","BASQUET","TENIS","GOLF"]   
+def start(lista):
+    #Esta funcion retorna una palabra aleatoria.
+    palabra=random.choice(lista)
+    return palabra
+def error(ahorcado,letra_mala,letra_buena,palabra):
+    print(ahorcado[len(letra_mala)])
+    print("")
+    print("")
+    print("Las letras incorrectas son: ")
+    for letra in letra_mala:
+        print(letra)
+        print("")
+    print("")
+    espacio="_"*len(palabra)
+    for i in range(len(palabra)): #Remplaza los espacios en blanco por la letra bien escrita
+        if palabra[i] in letra_buena:
+            espacio=espacio[:i] + palabra[i] + espacio[i+1:]
+    for letra in espacio:#Mostrará la palabra secreta con espacios entre letras
+        print(letra)
+    print("")
+def eleccion_letra(letras):
+   #Devuelve la letra que el jugador ingreso. Esta función hace que el jugador ingrese una letra y no cualquier otra cosa
+   while True:
+       letra=raw_input("Ingresar una letra: ")
+       letra_m=letra.upper()
+       if (len(letra_m)!=1):
+           print("Introducir una sola letra.\nVolver a intentar.")
+       if(letra_m in letras):
+           print("Esa letra ya se ha mencionado.\nElegir otra.")
+       elif(letra_m not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
+           print("Elegir una letra.")
+       else:
+           return letra_m
+def vuelve():
+    #Esta funcion devuelve True si el jugador quiere volver a jugar, de lo contrario devuelve False
+    print ("Gracias por jugar.\nQuieres jugar de nuevo? Si o No")
+    return raw_input().upper().startswith("S")
+#Programa principal
+letra_buena=""
+letra_mala=""
+palabra=start(lista)
+finalizar=False
+while True:
+    errores=error(ahorcado,letra_mala,letra_buena,palabra)
+    #El usuairo elije una letra.
+    letras=eleccion_letra(letra_buena+letra_mala)
+    if letras in palabra:
+        letra_buena=letra_buena+letras
+        #Se fija si el jugador gano
+        letras_mencionadas=True
+        for i in range(len(palabra)):
+            if (palabra[i] not in letra_buena):
+                letras_mencionadas=False
+                break
+        if letras_mencionadas:
+            print("¡Correcto! La palabra escondida es "+ palabra+
+                  "¡Ganaste/Ganaron!¡Felicidades!\nEl puntaje es de: "+str ((len(letra_buena))*10)+" puntos.")
+            finalizar=True
+    else:
+        letra_mala=letra_mala+letras
+        #Comprueba la cantidad de letras que ha ingresado el jugador y si perdió
+        if (len(letra_mala)==len(ahorcado)-1):
+            errores=error(ahorcado,letra_mala,letra_buena,palabra)
+            print ("¡Se ha/han quedado sin letras!\nDespues de "+ str(len(letra_mala)) +" letras incorrectas y " + str(len(letra_buena)) + " letras correctas, la palabra era "+ palabra+"."+" El puntaje es de: "+str ((len (letra_buena))*10)+" puntos.")
+            finalizar=True
+    #Pregunta al jugador si quiere jugar de nuevo
+    if finalizar:
+        if vuelve():
+            letra_buena = ""
+            letra_mala = ""
+            finalizar = False
+            palabra=start(lista)
+        else:
+            break
+            
+    
+    
+                
+
+    
+    
